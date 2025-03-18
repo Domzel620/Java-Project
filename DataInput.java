@@ -23,6 +23,10 @@ public class DataInput {
             
             return dataset;
         }
+    public ArrayList<Double> getDataSet(){
+        dataset = dataInput();
+        return dataset;
+    }
     public void printDataSet(){
         System.out.println("The Data set is: ");
             for (double data : dataset){

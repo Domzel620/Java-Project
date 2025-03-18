@@ -1,112 +1,165 @@
 import java.util.ArrayList;
-
+import java.util.Scanner;
 public class StatsLibrary {
-    DataInput data = new DataInput();
-    private double sum;
-    private double mean;
-    private double sqrsum;
-    private double variance;
-    private double stnddev;
-    private int n;
-    private int x;
-    private ArrayList<Double> dataset;
-    private ArrayList<Double> deviation;
-    private ArrayList<Double> sqrdeviation;
+    DataInput dataInput = new DataInput();
 
-    //Constructor
-    public StatsLibrary(){
-        sum = 0;
-        mean = 0;
-        sqrsum = 0;
-        variance = 0;
-        stnddev = 0;
-        n = 0;
-        x = 0;
-        dataset = new ArrayList<>();
-        deviation = new ArrayList<>();
-        sqrdeviation = new ArrayList<>();
-    }
-    //Gets the dataset from DataInput Class
-    public ArrayList<Double> getDataSet(){
-        dataset = data.dataInput();
-        n = dataset.size();
-        return dataset;
-    }
 
-    public void printDataset(){
-        if(n<1){
-            getDataSet();
-        }
-        System.out.println("This is your dataset: ");
-        for(double num : dataset){
-            System.out.print(num + ", ");
-        }
-        System.out.println();
-    }
-    
-    //Finds the mean of your dataset
-    public double mean(){
-        if (n<1){
-            getDataSet();
-        }
-        sum = 0;
-        for (double numbers : dataset){
+
+    public double mean(ArrayList<Integer> data){
+        double mean;
+        int sum = 0;
+        int n = data.size(); 
+        for (double numbers : data){
             sum += numbers;
         }
         mean = sum/n;
-        return mean;
+        return mean;  
     }
 
-    //Prints the Mean
-    public void printMean(){
-        System.out.println("This is your Mean: " + mean());
-    }
-
-    public double variance(){
-        if(mean == 0){
-            mean = mean();
-        }
-        deviation.clear();
-        sqrdeviation.clear();
+    public double variance(double mean, ArrayList<Integer> data){
         //This subtracts the mean
-        for(double numbers : dataset){
+        ArrayList<Double> deviation = new ArrayList<>();
+        ArrayList<Double> sqrdeviation = new ArrayList<>();
+        for(double numbers : data){
             numbers = numbers - mean;
             deviation.add(numbers); 
         }
-        //Squares the subtracted values and adds them to a new list
+        //This Squares the subtracted values and adds them to the new array list
         for(double num : deviation){
             num = Math.pow(num, 2);
             sqrdeviation.add(num);
+            System.out.print(num + ", ");
         }
-        //This adds squared balues together
-        sqrsum = 0;
+        //This adds the squared values together
+        double sqrsum = 0;
         for(double num : sqrdeviation){
             sqrsum += num;
         }
-        //This finds the Variance
-        x = n - 1;
-        variance = sqrsum/x;
+        //This finds the variance of your dataset
+        int x = sqrdeviation.size() - 1;
+        double variance = sqrsum/x;
         return variance;
     }
-
-    //This prints the variance
-    public void printVariance(){
-        System.out.println("This is your variance: " + variance());
-    }
-
-    //This finds the Standard Deviation
-    public double standardDev(){
-        if (mean == 0){
-            variance = variance();
-        }else if (variance == 0) {
-            variance = variance();
-        }
-        stnddev = Math.sqrt(variance);
+    //This finds the standard deviation
+    public double standardDeviation(double variance){
+        double stnddev = Math.sqrt(variance);
         return stnddev;
     }
+    //Probability Axioms-------------------------------------------------------------------------------------------------
 
-    //This prints the standard deviation
-    public void printStandardDev(){
-        System.out.println("This is your standard Deviation: " + standardDev());
+    //Independent and Dependent Intersections
+    public String indOrDep(double A, double B, double ANB){
+        //ANB = A * B
+        double AB = A * B;
+        if(ANB == AB){
+            return "Independent";
+        }else{
+            return "Dependent";
+        }
     }
-}
+    //Method to determine Independence
+    public boolean checkInd(double A, double B, double ANB){
+        double AB = A*B;
+        if(ANB == AB){
+            return true;
+        } else{
+            return false;
+        }
+    }
+    //Method to determine Dependence
+    public boolean checkDep(double A, double B, double ANB){
+        double AB = A*B;
+        if(ANB != AB){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    //Exclusive or NonExclusive Union
+    public double xor(double A, double B, double ANB){
+        Scanner input = new Scanner(System.in);
+        System.out.println("1.Exclusive or 2. Not exclusive?");
+        int answer = input.nextInt();
+        double or = 0;
+        switch (answer){
+            case 1:
+                //XOR: A + B - 2 * ANB
+                or = A + B -2 * ANB;
+                break;
+            case 2:
+                //OR: A + B - ANB
+                or = A + B - ANB;
+                break;
+            default:
+                System.out.println("Invalid Choice");
+        }
+        return or;
+    }
+    //Combinational and Permutational methods--------------------------------------------------------------------------------------
+    
+    //factorial method
+    public float factorial(int n){
+        if(n == 0){
+            return 1;
+        } 
+        float fact = n * factorial(n-1);
+        return fact;
+    }
+    //Combination Formula
+    public float combination(int n, int r){
+        //numerator
+        float num = factorial(n);
+        //denominator
+        float rr = factorial(r);
+        float nn = factorial(n-r);
+        float denom = rr * nn;
+        float combination = num/denom;
+        return combination;
+    }
+    //Permutation Formula
+    public float permutation(int n, int r){
+        float num = factorial(n);
+        float denom = factorial(n-r);
+        float permutation = num/denom;
+        return permutation;
+    }
+    //Binomial Distribution Formulas-----------------------------------------------------------------------------------------
+
+    //Combinational Binomial distribution
+    public float combBinomial(int n, int r, double p){
+        float comb = combination(n, r);
+        double q = 1-p;
+        p = Math.pow(p, r);
+        q = Math.pow(q, n-r);
+        double qp = p*q;
+        float binomial = (float) (comb * qp);
+        return binomial;
+
+    }
+    //Permutation Binomial distribution
+    public float permBinomial(int n, int r, double p){
+        float comb = permutation(n, r);
+        double q = 1-p;
+        p = Math.pow(p, r);
+        q = Math.pow(q, n-r);
+        double qp = p*q;
+        float binomial = (float) (comb * qp);
+        return binomial;
+
+    }
+    //Geometric Distributions
+    public float geoDist(double p, int n){
+        //P(Y=y)=(1-p)^(n-1)*p
+        float geometric = (float) (Math.pow(1-p, n-1)*p);
+        return geometric;
+    }
+    // Negative Geometric Distribution
+    public float negGeoDist(double p, int n, int r){
+        //P(Y=y) = (n-1, r-1)p^r(1-p)^(n-r)
+        float comb = combination(n-1, r-1);
+        float prob = (float) (Math.pow(p, r)*Math.pow(1-p, n-r));
+        float negativeGeo = comb * prob;
+        return negativeGeo;
+    }
+}   
+
