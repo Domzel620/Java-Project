@@ -5,7 +5,7 @@ public class StatsLibrary {
 
 
 
-    public double mean(ArrayList<Integer> data){
+    public double mean(ArrayList<Double> data){
         double mean;
         int sum = 0;
         int n = data.size(); 
@@ -16,7 +16,7 @@ public class StatsLibrary {
         return mean;  
     }
 
-    public double variance(double mean, ArrayList<Integer> data){
+    public double variance(double mean, ArrayList<Double> data){
         //This subtracts the mean
         ArrayList<Double> deviation = new ArrayList<>();
         ArrayList<Double> sqrdeviation = new ArrayList<>();
@@ -28,7 +28,6 @@ public class StatsLibrary {
         for(double num : deviation){
             num = Math.pow(num, 2);
             sqrdeviation.add(num);
-            System.out.print(num + ", ");
         }
         //This adds the squared values together
         double sqrsum = 0;
